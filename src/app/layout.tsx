@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
+import PriceMarquee from "@/components/PriceMarquee";
 
 const notoSerifBengali = Noto_Serif_Bengali({
   variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
  <Header />
 
         <Navbar />
+<PriceMarquee />
 
        <main>
          {children}
