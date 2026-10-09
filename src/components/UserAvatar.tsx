@@ -34,6 +34,7 @@ export default function UserAvatar() {
 
     setOpen(false);
     toast.success("সফলভাবে সাইন আউট হয়েছে!");
+
     router.replace("/signin");
     router.refresh();
   };
@@ -48,7 +49,7 @@ export default function UserAvatar() {
         aria-label="প্রোফাইল মেনু"
         className="flex cursor-pointer items-center gap-2"
       >
-        {/* Circular Avatar */}
+        {/* Profile Picture */}
         {user.image && !imageError ? (
           <img
             src={user.image}
@@ -62,7 +63,7 @@ export default function UserAvatar() {
           </div>
         )}
 
-        {/* Username */}
+        {/* Navbar Username */}
         <span className="hidden max-w-24 truncate text-sm font-medium text-gray-800 sm:block">
           {user.name?.split(" ")[0]}
         </span>
@@ -78,24 +79,39 @@ export default function UserAvatar() {
 
       {/* Dropdown Menu */}
       {open && (
-        <div className="absolute right-0 z-50 mt-3 w-44 rounded-lg border border-gray-200 bg-white py-2 shadow-lg">
-          <Link
-            href="/profile"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-          >
-            <FiUser size={16} />
-            আমার প্রোফাইল
-          </Link>
+        <div className="absolute right-0 z-50 mt-3 w-64 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+          
+          {/* User Full Name and Email */}
+          <div className="border-b border-gray-100 px-4 py-3">
+            <p className="truncate text-sm font-semibold text-gray-900">
+              {user.name || "User"}
+            </p>
 
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-sm text-red-500 hover:bg-red-50"
-          >
-            <FiLogOut size={16} />
-            সাইন আউট
-          </button>
+            <p className="mt-1 truncate text-xs text-gray-500">
+              {user.email}
+            </p>
+          </div>
+
+          {/* Menu Options */}
+          <div className="py-2">
+            <Link
+              href="/profile"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+            >
+              <FiUser size={16} />
+              আমার প্রোফাইল
+            </Link>
+
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-red-500 transition-colors hover:bg-red-50"
+            >
+              <FiLogOut size={16} />
+              সাইন আউট
+            </button>
+          </div>
         </div>
       )}
     </div>
