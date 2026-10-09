@@ -12,8 +12,7 @@ type CategoryPageProps = {
   }>;
 };
 
-const API_URL =
-  "https://api.abcz.workers.dev/api/bazardor";
+const API_URL = "https://api.abcz.workers.dev/api/bazardor";
 
 const categoryNames: Record<string, string> = {
   chal: "চাল",
@@ -125,7 +124,6 @@ export default async function CategoryPage({
 
         {/* Sorting Section */}
         <div className="mb-4 flex items-center justify-end rounded-xl border border-gray-200 bg-white px-5 py-4">
-
           <Suspense
             fallback={
               <div className="h-8 w-44 animate-pulse rounded-lg bg-gray-200" />
@@ -133,7 +131,6 @@ export default async function CategoryPage({
           >
             <CategorySort />
           </Suspense>
-
         </div>
 
         {/* Product Count */}
@@ -153,10 +150,7 @@ export default async function CategoryPage({
           </div>
         ) : (
           <div className="rounded-xl border border-gray-200 bg-white px-6 py-16 text-center">
-
-            <span className="text-4xl">
-              📦
-            </span>
+            <span className="text-4xl">📦</span>
 
             <h3 className="mt-4 text-lg font-semibold text-gray-800">
               কোনো পণ্য পাওয়া যায়নি
@@ -165,7 +159,6 @@ export default async function CategoryPage({
             <p className="mt-2 text-sm text-gray-500">
               এই ক্যাটাগরিতে বর্তমানে কোনো পণ্য নেই।
             </p>
-
           </div>
         )}
 
