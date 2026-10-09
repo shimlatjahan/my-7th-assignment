@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import PriceMarquee from "@/components/PriceMarquee";
+import { Suspense } from "react";
 
 const notoSerifBengali = Noto_Serif_Bengali({
   variable: "--font-geist-sans",
@@ -26,8 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
  <Header />
-
+<Suspense fallback={null}>
         <Navbar />
+        </Suspense>
 <PriceMarquee />
 
        <main>
