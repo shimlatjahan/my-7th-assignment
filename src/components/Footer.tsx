@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-          {/* Left Side */}
+          
           <div className="text-center sm:text-left">
             <Link
               href="/"
@@ -20,7 +20,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Right Side */}
+       
           <div className="text-center sm:max-w-xs sm:text-right">
             <p className="text-xs leading-relaxed text-gray-500">
               সকল দাম সম্ভাব্য; বাজার অবস্থার ওপর নির্ভর করে পরিবর্তিত হয়।

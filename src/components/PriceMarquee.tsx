@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 
+// ============================
+// Product Type
+// ============================
+
 type Product = {
   id: number;
   nameBn: string;
@@ -17,54 +21,94 @@ type Product = {
   };
 };
 
+// ============================
+// Products API
+// ============================
+
 const API_URL =
   "https://api.abcz.workers.dev/api/bazardor/products";
 
+// ============================
 // English Number → Bangla Number
+// ============================
+
 function banglaNumber(value: number) {
   return new Intl.NumberFormat("bn-BD", {
     maximumFractionDigits: 1,
   }).format(value);
 }
 
+// ============================
+// Price Marquee Component
+// ============================
+
 export default function PriceMarquee() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // ============================
+  // Fetch Products
+  // ============================
+
   useEffect(() => {
+    const controller = new AbortController();
+
     async function fetchProducts() {
       try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, {
+          signal: controller.signal,
+        });
 
+        // API Response Error
         if (!response.ok) {
-          throw new Error("Failed to fetch products");
+          if (!controller.signal.aborted) {
+            setProducts([]);
+          }
+          return;
         }
 
         const result = await response.json();
 
-        console.log("Products API:", result);
-
-        // Handle API response
-        const productList = Array.isArray(result)
+        // Handle Different API Response Structures
+        const productList: Product[] = Array.isArray(result)
           ? result
-          : Array.isArray(result.data)
+          : Array.isArray(result?.data)
             ? result.data
-            : Array.isArray(result.products)
+            : Array.isArray(result?.products)
               ? result.products
-              : Array.isArray(result.data?.products)
+              : Array.isArray(result?.data?.products)
                 ? result.data.products
                 : [];
 
-        setProducts(productList.slice(0, 12));
-      } catch (error) {
-        console.error("Marquee Error:", error);
+        // Show Maximum 12 Products
+        if (!controller.signal.aborted) {
+          setProducts(productList.slice(0, 12));
+        }
+      } catch {
+        // Network / CORS / API Failure
+        // Error Handle করে Website সচল রাখা
+
+        if (!controller.signal.aborted) {
+          setProducts([]);
+        }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     }
 
     fetchProducts();
+
+    // Cleanup
+    return () => {
+      controller.abort();
+    };
   }, []);
+
+  // ============================
+  // Loading State
+  // ============================
 
   if (loading) {
     return (
@@ -74,13 +118,20 @@ export default function PriceMarquee() {
     );
   }
 
+  // ============================
+  // Empty State
+  // ============================
+
   if (products.length === 0) {
     return null;
   }
 
+  // ============================
+  // Marquee UI
+  // ============================
+
   return (
     <div className="w-full overflow-hidden border-b border-green-100 bg-[#f5faf6] py-2">
-
       <Marquee
         speed={35}
         gradient={false}
@@ -97,7 +148,6 @@ export default function PriceMarquee() {
               key={product.id}
               className="mr-7 flex shrink-0 items-center gap-1 whitespace-nowrap text-[11px] sm:text-xs"
             >
-
               {/* Product Emoji */}
               <span className="text-xs">
                 {product.image || product.categoryIcon || "🛒"}
@@ -126,12 +176,10 @@ export default function PriceMarquee() {
                 {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
                 {banglaNumber(product.change?.pct ?? 0)}%
               </span>
-
             </div>
           );
         })}
       </Marquee>
-
     </div>
   );
 }

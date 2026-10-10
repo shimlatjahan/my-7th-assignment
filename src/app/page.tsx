@@ -35,6 +35,9 @@ async function getProducts(): Promise<Product[]> {
 }
 
 export default async function Home() {
+
+
+
   const products = await getProducts();
 
   // Top 6 products with increased prices

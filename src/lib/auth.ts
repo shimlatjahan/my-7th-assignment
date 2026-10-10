@@ -7,29 +7,37 @@ export const auth = betterAuth({
     client,
   }),
 
+   
   emailAndPassword: {
     enabled: true,
+
+    
     autoSignIn: false,
+
+   
+    requireEmailVerification: false,
   },
 
+  
   account: {
     accountLinking: {
       enabled: true,
 
-      // Google verified email দিয়ে automatic linking
+     
       trustedProviders: ["google"],
 
-      // Automatic linking বন্ধ থাকবে না
+      
       disableImplicitLinking: false,
 
-      // Different email হলে automatic linking নয়
+    
       allowDifferentEmails: false,
 
-      // Link হওয়ার সময় Google-এর name/image সংরক্ষণ
+      // Account link হলে user information update
       updateUserInfoOnLink: true,
     },
   },
 
+  
   socialProviders: {
     ...(process.env.GOOGLE_CLIENT_ID &&
     process.env.GOOGLE_CLIENT_SECRET

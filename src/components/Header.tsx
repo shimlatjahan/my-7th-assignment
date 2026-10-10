@@ -9,10 +9,10 @@ import UserAvatar from "@/components/UserAvatar";
 export default function Header() {
   const [date, setDate] = useState("");
 
-  // Better Auth Session
+ 
   const { data: session, isPending } = authClient.useSession();
 
-  // Bengali Date
+
   useEffect(() => {
     const updateDate = () => {
       const today = new Date().toLocaleDateString("bn-BD", {
@@ -65,14 +65,14 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Authentication / Avatar Section */}
+         
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
 
             {isPending ? (
-              // Session Loading
+             
               <div className="h-9 w-24 animate-pulse rounded-lg bg-gray-100" />
             ) : session?.user ? (
-              // Logged In: Avatar + Username
+              
               <UserAvatar />
             ) : (
               // Logged Out: Sign In + Sign Up

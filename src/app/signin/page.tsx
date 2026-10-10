@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -14,34 +14,87 @@ import { authClient } from "@/lib/auth-client";
 
 type SocialProvider = "google" | "github";
 
+// ============================
+// Safe Callback URL
+// ============================
+
+function getSafeCallbackUrl() {
+  if (typeof window === "undefined") {
+    return "/";
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const callbackUrl = params.get("callbackUrl");
+
+  if (
+    callbackUrl &&
+    callbackUrl.startsWith("/") &&
+    !callbackUrl.startsWith("//") &&
+    !callbackUrl.startsWith("/\\")
+  ) {
+    return callbackUrl;
+  }
+
+  return "/";
+}
+
 export default function SignInPage() {
   const router = useRouter();
 
+  // ============================
   // Form States
+  // ============================
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // ============================
   // Loading States
+  // ============================
+
   const [loading, setLoading] = useState(false);
+
   const [socialLoading, setSocialLoading] =
     useState<SocialProvider | null>(null);
 
   const isLoading = loading || socialLoading !== null;
 
   // ============================
-  // Sign In Handler
+  // Protected Route Redirect Toast
   // ============================
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const reason = params.get("reason");
+
+    if (reason === "login-required") {
+      toast.error("এই পেজটি দেখতে আগে সাইন ইন করুন!", {
+        toastId: "login-required",
+        autoClose: 3000,
+        style: {
+          width: "440px",
+          maxWidth: "calc(100vw - 32px)",
+          whiteSpace: "nowrap",
+          fontSize: "14px",
+        },
+      });
+    }
+  }, []);
+
+  
 
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Empty Field Validation
+
     if (!email.trim() || !password.trim()) {
       toast.error("সবগুলো তথ্য পূরণ করুন!");
       return;
     }
 
     // Email Validation
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email.trim())) {
@@ -52,14 +105,22 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
-      // Better Auth Email/Password Sign In
-      const { error } = await authClient.signIn.email({
+      
+
+      const { data, error } = await authClient.signIn.email({
         email: email.trim().toLowerCase(),
         password,
       });
 
-      // Authentication Error
+      
+
       if (error) {
+        console.error("BETTER AUTH LOGIN ERROR:", {
+          code: error.code,
+          message: error.message,
+          status: error.status,
+        });
+
         const invalidCredentials = [
           "INVALID_EMAIL_OR_PASSWORD",
           "INVALID_PASSWORD",
@@ -72,22 +133,34 @@ export default function SignInPage() {
         ) {
           toast.error("ইমেইল অথবা পাসওয়ার্ড ভুল!");
         } else {
-          toast.error("সাইন ইন করতে সমস্যা হয়েছে! আবার চেষ্টা করুন।");
+          toast.error(
+            error.message ||
+              "সাইন ইন করতে সমস্যা হয়েছে! আবার চেষ্টা করুন।"
+          );
         }
 
         return;
       }
 
-      // Success Toast
+      
+
+      console.log("Login Successful:", Boolean(data));
+
       toast.success("সফলভাবে সাইন ইন হয়েছে!");
 
-      // Redirect to Home
-      router.replace("/");
+      // Normal login → Home
+      // Protected route login → Requested page
+
+      const callbackUrl = getSafeCallbackUrl();
+
+      router.replace(callbackUrl);
       router.refresh();
     } catch (error) {
       console.error("Sign In Error:", error);
 
-      toast.error("সাইন ইন করতে সমস্যা হয়েছে! আবার চেষ্টা করুন।");
+      toast.error(
+        "সাইন ইন করতে সমস্যা হয়েছে! আবার চেষ্টা করুন।"
+      );
     } finally {
       setLoading(false);
     }
@@ -101,13 +174,24 @@ export default function SignInPage() {
     setSocialLoading(provider);
 
     try {
+      const callbackUrl = getSafeCallbackUrl();
+
       const { error } = await authClient.signIn.social({
         provider,
-        callbackURL: "/",
+        callbackURL: callbackUrl,
       });
 
       if (error) {
-        toast.error("সোশ্যাল লগইন ব্যর্থ হয়েছে!");
+        console.error("Social Login Error:", {
+          provider,
+          code: error.code,
+          message: error.message,
+          status: error.status,
+        });
+
+        toast.error(
+          error.message || "সোশ্যাল লগইন ব্যর্থ হয়েছে!"
+        );
       }
     } catch (error) {
       console.error("Social Login Error:", error);
@@ -122,7 +206,10 @@ export default function SignInPage() {
     <main className="min-h-[70vh] bg-[#F1F6F2] px-4 pt-12 pb-20 sm:pt-16">
       <div className="mx-auto w-full max-w-[440px]">
 
-        {/* Heading */}
+        {/* ============================
+            Heading
+        ============================ */}
+
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold text-[#1F2937]">
             সাইন ইন
@@ -134,10 +221,16 @@ export default function SignInPage() {
           </p>
         </div>
 
-        {/* Sign In Card */}
+        {/* ============================
+            Sign In Card
+        ============================ */}
+
         <div className="rounded-xl border border-[#E5EAE6] bg-white p-6 shadow-sm sm:p-7">
 
-          {/* Sign In Form */}
+          {/* ============================
+              Sign In Form
+          ============================ */}
+
           <form
             onSubmit={handleSignIn}
             noValidate
@@ -145,12 +238,14 @@ export default function SignInPage() {
           >
 
             {/* Email */}
+
             <TextField name="email" isRequired>
               <Label className="mb-2 block text-sm font-medium text-gray-800">
                 ইমেইল
               </Label>
 
               <Input
+                aria-label="ইমেইল"
                 type="email"
                 placeholder="you@example.com"
                 value={email}
@@ -161,12 +256,14 @@ export default function SignInPage() {
             </TextField>
 
             {/* Password */}
+
             <TextField name="password" isRequired>
               <Label className="mb-2 block text-sm font-medium text-gray-800">
                 পাসওয়ার্ড
               </Label>
 
               <Input
+                aria-label="পাসওয়ার্ড"
                 type="password"
                 placeholder="আপনার পাসওয়ার্ড"
                 value={password}
@@ -177,18 +274,21 @@ export default function SignInPage() {
             </TextField>
 
             {/* Sign In Button */}
+
             <Button
               type="submit"
               isDisabled={isLoading}
               className="mt-2 w-full cursor-pointer rounded-lg bg-[#008C45] py-3 text-sm font-semibold text-white transition hover:bg-[#007638] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading
-                ? "সাইন ইন হচ্ছে..."
-                : "সাইন ইন"}
+              {loading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
             </Button>
+
           </form>
 
-          {/* Divider */}
+          {/* ============================
+              Divider
+          ============================ */}
+
           <div className="my-5 flex items-center gap-3">
             <div className="h-px flex-1 bg-gray-200" />
 
@@ -199,10 +299,14 @@ export default function SignInPage() {
             <div className="h-px flex-1 bg-gray-200" />
           </div>
 
-          {/* Social Login Buttons */}
+          {/* ============================
+              Social Login Buttons
+          ============================ */}
+
           <div className="grid grid-cols-2 gap-3">
 
             {/* Google */}
+
             <Button
               type="button"
               variant="outline"
@@ -218,6 +322,7 @@ export default function SignInPage() {
             </Button>
 
             {/* GitHub */}
+
             <Button
               type="button"
               variant="outline"
@@ -231,9 +336,13 @@ export default function SignInPage() {
                 ? "অপেক্ষা করুন..."
                 : "GitHub দিয়ে লগইন করুন"}
             </Button>
+
           </div>
 
-          {/* Sign Up Link */}
+          {/* ============================
+              Sign Up Link
+          ============================ */}
+
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               অ্যাকাউন্ট নেই?{" "}
@@ -246,9 +355,13 @@ export default function SignInPage() {
               </Link>
             </p>
           </div>
+
         </div>
 
-        {/* Back to Home */}
+        {/* ============================
+            Back to Home
+        ============================ */}
+
         <div className="mt-6 text-center">
           <Link
             href="/"
@@ -257,6 +370,7 @@ export default function SignInPage() {
             ← হোম পেজে ফিরে যান
           </Link>
         </div>
+
       </div>
     </main>
   );

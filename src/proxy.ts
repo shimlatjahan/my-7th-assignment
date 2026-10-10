@@ -4,21 +4,21 @@ import { getSessionCookie } from "better-auth/cookies";
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
-  // Check whether the route requires authentication
+  
   const isProtectedRoute =
     pathname.startsWith("/product/") ||
     pathname === "/profile" ||
     pathname.startsWith("/profile/");
 
-  // Allow public routes
+ 
   if (!isProtectedRoute) {
     return NextResponse.next();
   }
 
-  // Check Better Auth session cookie
+ 
   const sessionCookie = getSessionCookie(request);
 
-  // Redirect unauthenticated users to Sign In
+ 
   if (!sessionCookie) {
     const signInUrl = new URL("/signin", request.url);
 
