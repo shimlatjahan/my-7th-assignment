@@ -68,7 +68,7 @@ export default function UserAvatar() {
           {user.name?.split(" ")[0]}
         </span>
 
-        {/* Dropdown Arrow */}
+        
         <FiChevronDown
           size={14}
           className={`text-gray-500 transition-transform ${
@@ -77,7 +77,7 @@ export default function UserAvatar() {
         />
       </button>
 
-      {/* Dropdown Menu */}
+      
       {open && (
         <div className="absolute right-0 z-50 mt-3 w-64 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
           
@@ -92,7 +92,7 @@ export default function UserAvatar() {
             </p>
           </div>
 
-          {/* Menu Options */}
+          
           <div className="py-2">
             <Link
               href="/profile"

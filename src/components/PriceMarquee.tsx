@@ -3,9 +3,6 @@
 import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 
-// ============================
-// Product Type
-// ============================
 
 type Product = {
   id: number;
@@ -21,16 +18,11 @@ type Product = {
   };
 };
 
-// ============================
-// Products API
-// ============================
 
 const API_URL =
   "https://api.abcz.workers.dev/api/bazardor/products";
 
-// ============================
-// English Number → Bangla Number
-// ============================
+
 
 function banglaNumber(value: number) {
   return new Intl.NumberFormat("bn-BD", {
@@ -38,17 +30,13 @@ function banglaNumber(value: number) {
   }).format(value);
 }
 
-// ============================
-// Price Marquee Component
-// ============================
+
 
 export default function PriceMarquee() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ============================
-  // Fetch Products
-  // ============================
+  
 
   useEffect(() => {
     const controller = new AbortController();
@@ -59,7 +47,7 @@ export default function PriceMarquee() {
           signal: controller.signal,
         });
 
-        // API Response Error
+        
         if (!response.ok) {
           if (!controller.signal.aborted) {
             setProducts([]);
@@ -80,13 +68,12 @@ export default function PriceMarquee() {
                 ? result.data.products
                 : [];
 
-        // Show Maximum 12 Products
+        
         if (!controller.signal.aborted) {
           setProducts(productList.slice(0, 12));
         }
       } catch {
-        // Network / CORS / API Failure
-        // Error Handle করে Website সচল রাখা
+        
 
         if (!controller.signal.aborted) {
           setProducts([]);
@@ -106,9 +93,7 @@ export default function PriceMarquee() {
     };
   }, []);
 
-  // ============================
-  // Loading State
-  // ============================
+ 
 
   if (loading) {
     return (
@@ -118,17 +103,12 @@ export default function PriceMarquee() {
     );
   }
 
-  // ============================
-  // Empty State
-  // ============================
-
+ 
   if (products.length === 0) {
     return null;
   }
 
-  // ============================
-  // Marquee UI
-  // ============================
+  
 
   return (
     <div className="w-full overflow-hidden border-b border-green-100 bg-[#f5faf6] py-2">
