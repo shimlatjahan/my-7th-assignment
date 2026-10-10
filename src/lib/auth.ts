@@ -7,37 +7,25 @@ export const auth = betterAuth({
     client,
   }),
 
-   
+  // Localhost এবং Vercel Domain অনুমোদন
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://my-7th-assignment-bs3j.vercel.app",
+  ],
+
   emailAndPassword: {
     enabled: true,
-
-    
     autoSignIn: false,
-
-   
     requireEmailVerification: false,
   },
 
-  
   account: {
     accountLinking: {
       enabled: true,
-
-     
       trustedProviders: ["google"],
-
-      
-      disableImplicitLinking: false,
-
-    
-      allowDifferentEmails: false,
-
-      // Account link হলে user information update
-      updateUserInfoOnLink: true,
     },
   },
 
-  
   socialProviders: {
     ...(process.env.GOOGLE_CLIENT_ID &&
     process.env.GOOGLE_CLIENT_SECRET
