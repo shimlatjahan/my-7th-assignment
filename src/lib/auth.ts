@@ -7,7 +7,7 @@ export const auth = betterAuth({
     client,
   }),
 
-  // Localhost এবং Vercel Domain অনুমোদন
+  
   trustedOrigins: [
     "http://localhost:3000",
     "https://my-7th-assignment-bs3j.vercel.app",
