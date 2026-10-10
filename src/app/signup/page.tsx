@@ -17,19 +17,14 @@ type SocialProvider = "google" | "github";
 export default function SignUpPage() {
   const router = useRouter();
 
-  // ============================
-  // Form States
-  // ============================
+ 
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // ============================
-  // Loading States
-  // ============================
-
+  
   const [loading, setLoading] = useState(false);
 
   const [socialLoading, setSocialLoading] =
@@ -37,15 +32,11 @@ export default function SignUpPage() {
 
   const isLoading = loading || socialLoading !== null;
 
-  // ============================
-  // Sign Up Handler
-  // ============================
-
+  
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 1. Empty Field Validation
-
+    
     if (
       !name.trim() ||
       !email.trim() ||
@@ -56,14 +47,13 @@ export default function SignUpPage() {
       return;
     }
 
-    // 2. Name Validation
-
+    
     if (name.trim().length < 2) {
       toast.error("নাম কমপক্ষে ২ অক্ষরের হতে হবে!");
       return;
     }
 
-    // 3. Email Validation
+    
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -72,15 +62,13 @@ export default function SignUpPage() {
       return;
     }
 
-    // 4. Password Validation
-
+   
     if (password.length < 8) {
       toast.error("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে!");
       return;
     }
 
-    // 5. Confirm Password Validation
-
+    
     if (password !== confirmPassword) {
       toast.error("পাসওয়ার্ড দুটি মিলছে না!");
       return;
@@ -89,9 +77,7 @@ export default function SignUpPage() {
     setLoading(true);
 
     try {
-      // ============================
-      // Better Auth Email Sign Up
-      // ============================
+      
 
       const { error } = await authClient.signUp.email({
         name: name.trim(),
@@ -99,9 +85,7 @@ export default function SignUpPage() {
         password,
       });
 
-      // ============================
-      // Authentication Error
-      // ============================
+      
 
       if (error) {
         console.error("Better Auth Sign Up Error:", {
@@ -124,10 +108,7 @@ export default function SignUpPage() {
         return;
       }
 
-      // ============================
-      // Registration Success
-      // ============================
-
+      
       toast.success(
         "অ্যাকাউন্ট তৈরি হয়েছে! এখন সাইন ইন করুন।",
         {
@@ -135,9 +116,7 @@ export default function SignUpPage() {
         }
       );
 
-      // ============================
-      // Redirect to Sign In Page
-      // ============================
+      
 
       router.replace("/signin");
       router.refresh();
@@ -153,10 +132,7 @@ export default function SignUpPage() {
     }
   };
 
-  // ============================
-  // Social Login Handler
-  // ============================
-
+  
   const handleSocialLogin = async (provider: SocialProvider) => {
     setSocialLoading(provider);
 
@@ -192,10 +168,7 @@ export default function SignUpPage() {
     <main className="min-h-[70vh] bg-[#F1F6F2] px-4 pt-12 pb-20 sm:pt-16">
       <div className="mx-auto w-full max-w-[440px]">
 
-        {/* ============================
-            Heading
-        ============================ */}
-
+        
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold text-[#1F2937]">
             সাইন আপ
@@ -206,16 +179,11 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        {/* ============================
-            Sign Up Card
-        ============================ */}
+        
 
         <div className="rounded-xl border border-[#E5EAE6] bg-white p-6 shadow-sm sm:p-7">
 
-          {/* ============================
-              Sign Up Form
-          ============================ */}
-
+          
           <form
             onSubmit={handleSignUp}
             noValidate
@@ -290,7 +258,7 @@ export default function SignUpPage() {
               />
             </TextField>
 
-            {/* Sign Up Button */}
+         
 
             <Button
               type="submit"
@@ -304,10 +272,7 @@ export default function SignUpPage() {
 
           </form>
 
-          {/* ============================
-              Divider
-          ============================ */}
-
+          
           <div className="my-5 flex items-center gap-3">
             <div className="h-px flex-1 bg-gray-200" />
 
@@ -318,14 +283,10 @@ export default function SignUpPage() {
             <div className="h-px flex-1 bg-gray-200" />
           </div>
 
-          {/* ============================
-              Social Login Buttons
-          ============================ */}
-
+          
           <div className="grid grid-cols-2 gap-3">
 
-            {/* Google */}
-
+           
             <Button
               type="button"
               variant="outline"
@@ -340,8 +301,7 @@ export default function SignUpPage() {
                 : "Google দিয়ে সাইন আপ"}
             </Button>
 
-            {/* GitHub */}
-
+           
             <Button
               type="button"
               variant="outline"
@@ -358,10 +318,7 @@ export default function SignUpPage() {
 
           </div>
 
-          {/* ============================
-              Sign In Link
-          ============================ */}
-
+          
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               আগে থেকেই অ্যাকাউন্ট আছে?{" "}
@@ -377,9 +334,7 @@ export default function SignUpPage() {
 
         </div>
 
-        {/* ============================
-            Back to Home
-        ============================ */}
+        
 
         <div className="mt-6 text-center">
           <Link

@@ -6,14 +6,14 @@ export default function NotFound() {
     <section className="flex min-h-[70vh] items-center justify-center bg-[#F1F6F2] px-4 py-16">
       <div className="mx-auto w-full max-w-lg text-center">
 
-        {/* 404 Icon */}
+       
         <div className="mb-6 flex justify-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
             <FiAlertCircle className="text-4xl text-green-700" />
           </div>
         </div>
 
-        {/* 404 Number */}
+      
         <h1 className="text-7xl font-extrabold tracking-tight text-green-700 sm:text-8xl">
           404
         </h1>

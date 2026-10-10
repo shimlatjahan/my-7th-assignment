@@ -148,9 +148,7 @@ export default function SignInPage() {
 
       toast.success("সফলভাবে সাইন ইন হয়েছে!");
 
-      // Normal login → Home
-      // Protected route login → Requested page
-
+      
       const callbackUrl = getSafeCallbackUrl();
 
       router.replace(callbackUrl);
@@ -166,10 +164,7 @@ export default function SignInPage() {
     }
   };
 
-  // ============================
-  // Social Login Handler
-  // ============================
-
+ 
   const handleSocialLogin = async (provider: SocialProvider) => {
     setSocialLoading(provider);
 
@@ -206,9 +201,7 @@ export default function SignInPage() {
     <main className="min-h-[70vh] bg-[#F1F6F2] px-4 pt-12 pb-20 sm:pt-16">
       <div className="mx-auto w-full max-w-[440px]">
 
-        {/* ============================
-            Heading
-        ============================ */}
+        
 
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold text-[#1F2937]">
@@ -221,15 +214,11 @@ export default function SignInPage() {
           </p>
         </div>
 
-        {/* ============================
-            Sign In Card
-        ============================ */}
+       
 
         <div className="rounded-xl border border-[#E5EAE6] bg-white p-6 shadow-sm sm:p-7">
 
-          {/* ============================
-              Sign In Form
-          ============================ */}
+          
 
           <form
             onSubmit={handleSignIn}
@@ -237,7 +226,7 @@ export default function SignInPage() {
             className="space-y-4"
           >
 
-            {/* Email */}
+            
 
             <TextField name="email" isRequired>
               <Label className="mb-2 block text-sm font-medium text-gray-800">
@@ -255,7 +244,7 @@ export default function SignInPage() {
               />
             </TextField>
 
-            {/* Password */}
+           
 
             <TextField name="password" isRequired>
               <Label className="mb-2 block text-sm font-medium text-gray-800">
@@ -285,10 +274,7 @@ export default function SignInPage() {
 
           </form>
 
-          {/* ============================
-              Divider
-          ============================ */}
-
+          
           <div className="my-5 flex items-center gap-3">
             <div className="h-px flex-1 bg-gray-200" />
 
@@ -299,9 +285,7 @@ export default function SignInPage() {
             <div className="h-px flex-1 bg-gray-200" />
           </div>
 
-          {/* ============================
-              Social Login Buttons
-          ============================ */}
+          
 
           <div className="grid grid-cols-2 gap-3">
 
@@ -339,10 +323,7 @@ export default function SignInPage() {
 
           </div>
 
-          {/* ============================
-              Sign Up Link
-          ============================ */}
-
+       
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               অ্যাকাউন্ট নেই?{" "}
@@ -358,9 +339,7 @@ export default function SignInPage() {
 
         </div>
 
-        {/* ============================
-            Back to Home
-        ============================ */}
+        
 
         <div className="mt-6 text-center">
           <Link
